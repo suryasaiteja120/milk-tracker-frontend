@@ -1,0 +1,368 @@
+/* ==========================================================================
+   Motion
+   Everything here is decorative and switches off under
+   prefers-reduced-motion (see the global rule in index.css).
+   Entrance animations use `backwards` fill so they never fight with the
+   hover / loading states that apply once they finish.
+   ========================================================================== */
+
+:root {
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+@keyframes rise-sm {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    transform: scale(1.45);
+    opacity: 0;
+  }
+}
+
+@keyframes ring-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+/* ---- Page entrances ---------------------------------------------------------- */
+.page > :not(.dash) {
+  animation: rise 0.5s var(--ease-out) backwards;
+}
+
+.page > .list-page,
+.page > .profile-grid,
+.page > .settings-grid {
+  animation: none;
+}
+
+.list-page > * {
+  animation: rise 0.5s var(--ease-out) backwards;
+}
+
+.list-page > :nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.list-page > :nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.dash .page-actions {
+  animation: rise 0.45s var(--ease-out) backwards;
+}
+
+.stats .stat {
+  animation: rise 0.55s var(--ease-out) backwards;
+}
+
+.stats .stat:nth-child(1) {
+  animation-delay: 0.05s;
+}
+
+.stats .stat:nth-child(2) {
+  animation-delay: 0.13s;
+}
+
+.stats .stat:nth-child(3) {
+  animation-delay: 0.21s;
+}
+
+.stats .stat:nth-child(4) {
+  animation-delay: 0.29s;
+}
+
+.dash-main > *,
+.dash-side > * {
+  animation: rise 0.6s var(--ease-out) backwards;
+}
+
+.dash-main > :nth-child(1) {
+  animation-delay: 0.3s;
+}
+
+.dash-main > :nth-child(2) {
+  animation-delay: 0.42s;
+}
+
+.dash-side > :nth-child(1) {
+  animation-delay: 0.36s;
+}
+
+.dash-side > :nth-child(2) {
+  animation-delay: 0.48s;
+}
+
+.dash-side > :nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+/* ---- Route map ------------------------------------------------------------------ */
+.route-line {
+  animation: fade 0.4s ease backwards;
+  animation-delay: calc(var(--i, 0) * 28ms + 0.3s);
+}
+
+/* travelled segments draw themselves, one after another */
+.route-line.is-travelled {
+  stroke-dasharray: 100;
+  animation: draw 0.4s ease-out backwards;
+  animation-delay: calc(var(--i, 0) * 38ms + 0.35s);
+}
+
+.node-pop {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.22s var(--ease-out);
+  animation: pop 0.5s var(--ease-spring) backwards;
+  animation-delay: calc(var(--i, 0) * 26ms + 0.4s);
+}
+
+.route-node:hover .node-pop,
+.route-node:focus-visible .node-pop {
+  transform: scale(1.14);
+}
+
+.node-today {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+.node-selected {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ring-in 0.25s var(--ease-out);
+}
+
+.day-detail-swap {
+  animation: rise-sm 0.32s var(--ease-out) backwards;
+}
+
+/* ---- Chart ------------------------------------------------------------------------ */
+.bar-grow {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: grow-y 0.65s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 24ms + 0.5s);
+  transition: filter 0.15s;
+}
+
+.chart-bar:hover .bar-grow {
+  filter: brightness(1.1);
+}
+
+.chart-average {
+  animation: fade 0.6s ease 1.3s backwards;
+}
+
+/* ---- Balance ----------------------------------------------------------------------- */
+.balance-progress span {
+  transform-origin: left;
+  animation: grow-x 0.9s var(--ease-out) 0.65s backwards;
+}
+
+/* ---- Lists & tables ------------------------------------------------------------------- */
+.stop,
+.payment-row {
+  animation: rise-sm 0.45s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 60ms + 0.55s);
+}
+
+.stop:nth-child(2),
+.payment-row:nth-child(2) {
+  --i: 1;
+}
+
+.stop:nth-child(3),
+.payment-row:nth-child(3) {
+  --i: 2;
+}
+
+.stop:nth-child(4),
+.payment-row:nth-child(4) {
+  --i: 3;
+}
+
+.stop:nth-child(5) {
+  --i: 4;
+}
+
+.table tbody tr {
+  animation: rise-sm 0.4s var(--ease-out) backwards;
+  animation-delay: calc(var(--i, 0) * 32ms + 0.2s);
+}
+
+.table tbody tr:nth-child(2) { --i: 1; }
+.table tbody tr:nth-child(3) { --i: 2; }
+.table tbody tr:nth-child(4) { --i: 3; }
+.table tbody tr:nth-child(5) { --i: 4; }
+.table tbody tr:nth-child(6) { --i: 5; }
+.table tbody tr:nth-child(7) { --i: 6; }
+.table tbody tr:nth-child(8) { --i: 7; }
+.table tbody tr:nth-child(9) { --i: 8; }
+.table tbody tr:nth-child(n + 10) { --i: 9; }
+
+.setting-row,
+.settings-card {
+  animation: rise 0.5s var(--ease-out) backwards;
+}
+
+.settings-card:nth-child(2) { animation-delay: 0.07s; }
+.settings-card:nth-child(3) { animation-delay: 0.14s; }
+.settings-card:nth-child(4) { animation-delay: 0.21s; }
+
+.setting-row {
+  animation-name: fade;
+}
+
+.profile-card,
+.form-card {
+  animation: rise 0.5s var(--ease-out) backwards;
+}
+
+.form-card {
+  animation-delay: 0.1s;
+}
+
+.badge {
+  animation: pop 0.45s var(--ease-spring) 0.9s backwards;
+}
+
+/* ---- Hover & press feedback ------------------------------------------------------------- */
+.stat,
+.summary {
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out), border-color 0.25s;
+}
+
+.stat:hover,
+.summary:hover {
+  transform: translateY(-3px);
+  border-color: var(--line-strong);
+  box-shadow: 0 1px 2px rgba(16, 34, 47, 0.05), 0 22px 40px -22px rgba(16, 34, 47, 0.32);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -10px var(--accent);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.985);
+}
+
+.icon-btn {
+  transition: background-color 0.15s, border-color 0.15s, transform 0.15s var(--ease-out);
+}
+
+.icon-btn:active {
+  transform: scale(0.92);
+}
+
+.nav-link svg {
+  transition: transform 0.22s var(--ease-out);
+}
+
+.nav-link:hover svg {
+  transform: translateX(2px);
+}
+
+.stop,
+.payment-row,
+.notification {
+  transition: background-color 0.18s;
+}
+
+.switch {
+  transition: background-color 0.25s;
+}
+
+.switch::after {
+  transition: transform 0.28s var(--ease-spring);
+}
+
+/* ---- Sign-in screens --------------------------------------------------------------------- */
+.auth-card {
+  animation: rise 0.65s var(--ease-out) backwards;
+}
+
+.auth-copy {
+  animation: rise 0.8s var(--ease-out) 0.1s backwards;
+}
+
+.art-line {
+  stroke-dasharray: 100;
+  animation: draw 2.2s ease-in-out 0.3s backwards;
+}
+
+.auth-art .node-pop {
+  animation-delay: calc(var(--i, 0) * 150ms + 0.5s);
+}
+
+.auth-success-icon {
+  animation: pop 0.6s var(--ease-spring) 0.1s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stat:hover,
+  .summary:hover,
+  .btn-primary:hover:not(:disabled),
+  .nav-link:hover svg {
+    transform: none;
+  }
+}
+
+.strength-bars span.on {
+  animation: grow-x 0.3s var(--ease-out) backwards;
+  transform-origin: left;
+}

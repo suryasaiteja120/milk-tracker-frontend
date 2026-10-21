@@ -28,26 +28,35 @@ function getCsrfToken() {
   return match ? decodeURIComponent(match[1]) : null
 }
 
+
 async function initializeCsrf() {
-  await fetch(`${API_URL}/api/csrf`, {
+  const response = await fetch(`${API_URL}/api/csrf`, {
     method: 'GET',
     credentials: 'include',
   });
 
-  if (!getCsrfToken()) {
-    throw new ApiError(
-      'Could not initialize security token. Please try again.',
-      0
-    );
+  if (!response.ok) {
+    throw new ApiError('Could not initialize security token. Please try again.', response.status);
   }
+
+  const data = await response.json();
+
+  if (!data.token) {
+    throw new ApiError('Could not initialize security token. Please try again.', 0);
+  }
+
+  return data.token;
 }
+
 
 export async function api(path, { method = 'GET', body, parse = 'json', auth = true, errorMessage } = {}) {
   let response
   const unsafeMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
 
+let csrfToken = null;
+
 if (unsafeMethods.includes(method.toUpperCase())) {
-  await initializeCsrf();
+  csrfToken = await initializeCsrf();
 }
   try {
     response = await fetch(`${API_URL}${path}`, {

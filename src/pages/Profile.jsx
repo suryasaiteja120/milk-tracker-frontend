@@ -11,6 +11,7 @@ export default function Profile() {
   const [attempt, setAttempt] = useState(0)
   const [editing, setEditing] = useState(false)
   const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [formError, setFormError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -39,20 +40,26 @@ export default function Profile() {
   const save = async (event) => {
     event.preventDefault()
     setFormError('')
-    if (!name.trim() || !phone.trim()) {
-      setFormError('Name and phone number are both required.')
-      return
-    }
+    if (!name.trim() || !phone.trim() || !email.trim()) {
+  setFormError('Name, email, and phone number are required.')
+  return
+}
+
+if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+  setFormError('Please enter a valid email address.')
+  return
+}
     setSaving(true)
     try {
       const data = await api(`/api/auth/profile/${user.id}`, {
         method: 'PUT',
-        body: { name, phone },
+        body: { name, email: email.trim(), phone },
         errorMessage: 'We could not update your profile.',
       })
       setProfile(data)
       setName(data.name)
       setPhone(data.phone)
+      setEmail(data.email ?? '')
       updateUser(data)
       setEditing(false)
       notify('Profile updated.')
@@ -67,6 +74,7 @@ export default function Profile() {
     setFormError('')
     setName(profile.name)
     setPhone(profile.phone)
+    setEmail(profile.email ?? '')
   }
 
   if (loadError) {
@@ -133,13 +141,25 @@ export default function Profile() {
           </div>
 
           <div className="field">
-            <label htmlFor="pf-email">Email</label>
-            <div className="input-wrap">
-              <Mail className="input-icon" size={19} strokeWidth={1.6} />
-              <input id="pf-email" className="input" value={profile.email ?? ''} disabled readOnly />
-            </div>
-            <span className="field-hint">Email can't be changed.</span>
-          </div>
+  <label htmlFor="pf-email">Email</label>
+  <div className="input-wrap">
+    <Mail className="input-icon" size={19} strokeWidth={1.6} />
+    <input
+      id="pf-email"
+      type="email"
+      className="input"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      disabled={!editing || saving}
+      readOnly={!editing}
+      autoComplete="email"
+      required
+    />
+  </div>
+  {!editing && (
+    <span className="field-hint">Click Edit to change your email.</span>
+  )}
+</div>
 
           <div className="field">
             <label htmlFor="pf-phone">Phone number</label>

@@ -62,12 +62,12 @@ if (unsafeMethods.includes(method.toUpperCase())) {
     response = await fetch(`${API_URL}${path}`, {
       method,
       credentials: 'include',
-      headers: {
+      
+headers: {
   ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}),
-  ...(['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase()) && getCsrfToken()
-    ? { 'X-XSRF-TOKEN': getCsrfToken() }
-    : {}),
+  ...(csrfToken ? { 'X-XSRF-TOKEN': csrfToken } : {}),
 },
+
       body: body !== undefined ? JSON.stringify(body) : undefined,
     })
   } catch {
